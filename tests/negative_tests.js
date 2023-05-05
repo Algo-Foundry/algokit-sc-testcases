@@ -27,22 +27,84 @@ describe("Stateful Smart Contract Positive Tests", function () {
   });
 
   it("Initialize monster with < 5 Health fails", async () => {
-    // write your code here
+    await expect(algotxn.deployGame(creator, 1)).to.be.rejectedWith(Error);
   });
 
   it("Attacks monster successfully", async () => {
-    // write your code here
+    await algotxn.optIntoApp(player, appId);
+
+    // attack 3 times
+    const appArgs = [new Uint8Array(Buffer.from("Attack"))];
+    for (let i = 0; i < 3; i++) {
+      await algotxn.callApp(player, appId, appArgs);
+    }
+
+    // attack fails
+    await expect(algotxn.callApp(player, appId, appArgs)).to.be.rejectedWith(
+      Error
+    );
   });
 
   it("Reward player when monster is alive", async () => {
-    // write your code here
+    await algotxn.optIntoApp(player, appId);
+
+    // attack once
+    const appArgs = [new Uint8Array(Buffer.from("Attack"))];
+    await algotxn.callApp(player, appId, appArgs);
+
+    // attempt to reward player
+    const algodClient = algotxn.getAlgodClient();
+    let suggestedParams = await algodClient.getTransactionParams().do();
+    suggestedParams.fee = algosdk.ALGORAND_MIN_TX_FEE * 2;
+    const gameGS = await algotxn.readGlobalState(appId);
+    const mvp = gameGS.get("Mvp");
+    const appArgs2 = [new Uint8Array(Buffer.from("Reward"))];
+    const accounts = [mvp];
+    await expect(
+      algotxn.callApp(creator, appId, appArgs2, accounts, suggestedParams)
+    ).to.be.rejectedWith(Error);
   });
 
   it("Reward player fails when address is accounts is different from global state", async () => {
-    // write your code here
+    await algotxn.optIntoApp(player, appId);
+
+    // attack 3 times
+    const appArgs = [new Uint8Array(Buffer.from("Attack"))];
+    for (let i = 0; i < 3; i++) {
+      await algotxn.callApp(player, appId, appArgs);
+    }
+
+    // reward player
+    const player2 = algosdk.generateAccount();
+    const algodClient = algotxn.getAlgodClient();
+    let suggestedParams = await algodClient.getTransactionParams().do();
+    suggestedParams.fee = algosdk.ALGORAND_MIN_TX_FEE * 2;
+    const appArgs2 = [new Uint8Array(Buffer.from("Reward"))];
+    const accounts = [player2.addr];
+    await expect(
+      algotxn.callApp(creator, appId, appArgs2, accounts, suggestedParams)
+    ).to.be.rejectedWith(Error);
   });
 
   it("Reward player fails when called by non-creator", async () => {
-    // write your code here
+    await algotxn.optIntoApp(player, appId);
+
+    // attack 3 times
+    const appArgs = [new Uint8Array(Buffer.from("Attack"))];
+    for (let i = 0; i < 3; i++) {
+      await algotxn.callApp(player, appId, appArgs);
+    }
+
+    // player decides to reward himself
+    const algodClient = algotxn.getAlgodClient();
+    let suggestedParams = await algodClient.getTransactionParams().do();
+    suggestedParams.fee = algosdk.ALGORAND_MIN_TX_FEE * 2;
+    const gameGS = await algotxn.readGlobalState(appId);
+    const mvp = gameGS.get("Mvp");
+    const appArgs2 = [new Uint8Array(Buffer.from("Reward"))];
+    const accounts = [mvp];
+    await expect(
+      algotxn.callApp(player, appId, appArgs2, accounts, suggestedParams)
+    ).to.be.rejectedWith(Error);
   });
 });
