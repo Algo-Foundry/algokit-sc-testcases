@@ -1,0 +1,16 @@
+{
+  "name": "algokit-sc-testcases",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Charlie Kong <charlie@algofoundry.studio>",
+  "license": "MIT",
+  "dependencies": {
+    "algosdk": "^2.2.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.2.0"
+  }
+}

@@ -1,45 +1,57 @@
-# algokit-sc-testcases
+# Test cases assignment
+In this assignment, you are required to write some test cases for the stateful smart contract. This contract is based on the previous assignment.
 
-This project has been generated using AlgoKit. See below for default getting started instructions.
+Write positive test cases to ensure that the smart contract works in the intended way and negative test cases to ensure transactions are rejected if they do fail the logic checks within the contract.
 
-# Setup
+## Positive test cases
+Complete the code in `test/success_tests.js`. Write test cases to cover these scenarios,
 
-### Initial setup
+### Deploys game contract successfully 
+1. Initial monster health is same as the value specified during deployment.
+2. Initial max damage is set to 0.
 
-1. Clone this repository: `git clone {repository_url}`
-2. Install pre-requisites:
-   - If you have AlgoKit installed, run `algokit bootstrap poetry` within this folder;
-   - or:
-     - Install `Python` - [Link](https://www.python.org/downloads/): The minimum required version is `3.10`. Ensure you can execute `python -V` and get `3.10`+.
-     - Install `Poetry` - [Link](https://python-poetry.org/docs/#installation): The minimum required version is `1.2`. Ensure you can execute `poetry -V` and get `1.2`+.
-     - If you're not using PyCharm, then run `poetry install` in the root directory (this should set up `.venv` and also install all Python dependencies) - PyCharm will do this for you automatically on startup 🪄.
-3. Open the project and start debugging / developing via:
-   - VS Code
-     1. Open the repository root in VS Code
-     2. Install recommended extensions
-     3. Hit F5 (or whatever you have debug mapped to) and it should start running with breakpoint debugging.
-        (**NOTE:** The first time you run, VS Code may prompt you to select the Python Interpreter. Select python from the .venv path within this project)
-   - IDEA (e.g. PyCharm)
-     1. Open the repository root in the IDE
-     2. It should automatically detect it's a Poetry project and set up a Python interpreter and virtual environment.
-     3. Hit Shift+F9 (or whatever you have debug mapped to) and it should start running with breakpoint debugging.
-   - Other
-     1. Open the repository root in your text editor of choice
-     2. In a terminal run `poetry shell`
-     3. Run `python app.py` through your debugger of choice
+### Account opts in successfully
+1. Initial player damage is set to 0.
 
-### Subsequently
+### Attacks monster successfully
+1. Max damage and monster health is updated.
+2. Player damage is updated
+3. Highest player damage address is recorded.
 
-1. If you update to the latest source code and there are new dependencies you will need to run `poetry install` again
-2. Follow step 3 above
+### Reward player successfully
+1. MVP player receives the reward.
 
-# Tools
+## Negative test cases
+Complete the code in `test/negative_tests.js`. Write test cases to cover these scenarios,
 
-This project makes use of Python to build Algorand smart contracts. The following tools are in use:
+1. Initialize monster with < 5 Health fails.
+2. Attacking a monster with 0 health fails.
+3. Reward player when monster is alive.
+4. Reward player fails when address is accounts is different from global state.
+5. Reward player fails when called by non-creator
 
-- [Poetry](https://python-poetry.org/): Python packaging and dependency management.- [Black](https://github.com/psf/black): A Python code formatter.
-- [Ruff](https://github.com/charliermarsh/ruff): An extremely fast Python linter.
+Feel free to include additional test cases if necessary.
 
-- [mypy](https://mypy-lang.org/): Static type checker.
+## Setup instructions
 
-It has also been configured to have a productive dev experience out of the box in VS Code, see the [.vscode](./.vscode) folder.
+### Install python packages via AlgoKit
+run `algokit bootstrap poetry` within this folder
+
+### Install JS packages
+run `yarn install`
+
+### Update environement variables
+1. Copy `.env.example` to `.env`
+2. Update Algorand Sandbox credentials in `.env` file
+3. Update accounts in `.env` file
+
+### Initialize virtual environment
+run `poetry shell`
+
+### Compile Contracts
+1. run `python game_approval.py`
+2. run `python game_clearstate.py`
+
+### Run Tests
+1. run `yarn run mocha tests/success_tests.js`
+2. run `yarn run mocha tests/negative_tests.js`

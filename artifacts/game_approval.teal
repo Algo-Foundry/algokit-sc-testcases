@@ -1,0 +1,160 @@
+#pragma version 8
+txn ApplicationID
+int 0
+==
+bnz main_l21
+txn OnCompletion
+int OptIn
+==
+bnz main_l20
+txn OnCompletion
+int CloseOut
+==
+bnz main_l19
+txn OnCompletion
+int UpdateApplication
+==
+bnz main_l18
+txn OnCompletion
+int DeleteApplication
+==
+bnz main_l17
+txn OnCompletion
+int NoOp
+==
+bnz main_l7
+err
+main_l7:
+global GroupSize
+int 1
+==
+assert
+txna ApplicationArgs 0
+byte "Attack"
+==
+bnz main_l11
+txna ApplicationArgs 0
+byte "Reward"
+==
+bnz main_l10
+err
+main_l10:
+txn Sender
+global CreatorAddress
+==
+assert
+byte "Health"
+app_global_get
+int 0
+<=
+assert
+txna Accounts 1
+byte "Mvp"
+app_global_get
+==
+assert
+itxn_begin
+int pay
+itxn_field TypeEnum
+txna Accounts 1
+itxn_field Receiver
+int 1000000
+itxn_field Amount
+int 0
+itxn_field Fee
+itxn_submit
+int 1
+return
+main_l11:
+byte "Health"
+app_global_get
+int 0
+>
+assert
+int 2
+byte "Health"
+app_global_get
+>
+bnz main_l16
+byte "Health"
+byte "Health"
+app_global_get
+int 2
+-
+app_global_put
+main_l13:
+txn Sender
+byte "Damage"
+app_local_get
+int 2
++
+byte "MaxDamage"
+app_global_get
+>
+bnz main_l15
+main_l14:
+txn Sender
+byte "Damage"
+txn Sender
+byte "Damage"
+app_local_get
+int 2
++
+app_local_put
+int 1
+return
+main_l15:
+byte "Mvp"
+txn Sender
+app_global_put
+byte "MaxDamage"
+txn Sender
+byte "Damage"
+app_local_get
+int 2
++
+app_global_put
+b main_l14
+main_l16:
+byte "Health"
+int 0
+app_global_put
+b main_l13
+main_l17:
+int 0
+return
+main_l18:
+int 0
+return
+main_l19:
+int 1
+return
+main_l20:
+txn Sender
+txn ApplicationID
+app_opted_in
+assert
+txn Sender
+byte "Damage"
+int 0
+app_local_put
+int 1
+return
+main_l21:
+txna ApplicationArgs 0
+btoi
+int 5
+>=
+assert
+byte "Health"
+txna ApplicationArgs 0
+btoi
+app_global_put
+byte "MaxDamage"
+int 0
+app_global_put
+byte "Mvp"
+byte ""
+app_global_put
+int 1
+return
