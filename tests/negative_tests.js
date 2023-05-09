@@ -30,7 +30,7 @@ describe("Stateful Smart Contract Positive Tests", function () {
     await expect(algotxn.deployGame(creator, 1)).to.be.rejectedWith(Error);
   });
 
-  it("Attacks monster successfully", async () => {
+  it("Attacks monster when it has no health left", async () => {
     await algotxn.optIntoApp(player, appId);
 
     // attack 3 times
