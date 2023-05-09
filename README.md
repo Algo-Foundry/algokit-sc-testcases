@@ -53,5 +53,4 @@ run `poetry shell`
 2. run `python game_clearstate.py`
 
 ### Run Tests
-1. run `yarn run mocha tests/success_tests.js`
-2. run `yarn run mocha tests/negative_tests.js`
+1. run `yarn run mocha`
