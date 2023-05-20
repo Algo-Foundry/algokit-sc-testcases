@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 const assert = chai.assert;
 const expect = chai.expect;
 
-describe("Stateful Smart Contract Positive Tests", function () {
+describe("Stateful Smart Contract Negative Tests", function () {
   let appId, appAddress, player;
   const creator = algosdk.mnemonicToSecretKey(process.env.CREATOR_MNEMONIC);
 
